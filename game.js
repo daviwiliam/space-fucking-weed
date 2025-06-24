@@ -42,10 +42,11 @@ class Game {
     ];
     this.topScores = [];
     this.imagens.bandeiras = {};
-
+    this.inputElement = document.getElementById('tecladoNome');
   }
 
   async iniciar() {
+    this.inputElement = document.getElementById('tecladoNome');
     await this.carregarTudo();
     this.configurarEventos();
     canvas.addEventListener('click', (e) => {
@@ -56,8 +57,19 @@ class Game {
       // Clique no campo de nome
       if (mouseX >= 100 && mouseX <= 280 && mouseY >= 330 && mouseY <= 370) {
         this.digitandoNome = true;
+        this.inputElement.value = this.nomeDigitado;
+        this.inputElement.style.pointerEvents = 'auto';
+        this.inputElement.style.opacity = '1';
+        this.inputElement.focus();
+
+        this.inputElement.oninput = () => {
+          this.nomeDigitado = this.inputElement.value.slice(0, 10);
+        };
       } else {
         this.digitandoNome = false;
+        this.inputElement.blur();
+        this.inputElement.style.pointerEvents = 'none';
+        this.inputElement.style.opacity = '0';
       }
 
       // Clique nos botões
@@ -154,6 +166,9 @@ class Game {
     this.estado = 'inicial';
     this.nomeDigitado = '';
     this.digitandoNome = false;
+    this.inputElement.blur();
+    this.inputElement.style.pointerEvents = 'none';
+    this.inputElement.style.opacity = '0';
   }
 
   async carregarTopScores() {
