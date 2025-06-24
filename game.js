@@ -126,6 +126,20 @@ class Game {
         }
       }
     });
+
+    canvas.addEventListener('touchstart', (e) => {
+      const touchX = e.touches[0].clientX;
+      if (touchX < window.innerWidth / 2) {
+        this.keys['ArrowLeft'] = true;
+      } else {
+        this.keys['ArrowRight'] = true;
+      }
+    });
+
+    canvas.addEventListener('touchend', () => {
+      this.keys['ArrowLeft'] = false;
+      this.keys['ArrowRight'] = false;
+    });
   }
 
   usarPoderEspecial() {
