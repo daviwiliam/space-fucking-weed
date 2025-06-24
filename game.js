@@ -230,10 +230,12 @@ class Game {
 
       const { hash } = await hashResponse.json();
 
+      const pais = 'br'
+
       const insertResponse = await fetch(`${API_BASE_URL}/top-scores`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, score, hash })
+        body: JSON.stringify({ nome, score, pais, hash })
       });
 
       if (!insertResponse.ok) throw new Error('Erro ao salvar score');
