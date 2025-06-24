@@ -220,7 +220,7 @@ class Game {
 
   async enviarPontuacao(nome, score) {
     try {
-      const hashResponse = await fetch(`${API_BASE_URL}/hash`, {
+      const hashResponse = await fetch(`${API_BASE_URL}/hash/gerar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, score })
