@@ -199,7 +199,7 @@ class Game {
 
   async carregarTopScores() {
     try {
-      const resposta = await fetch(`${API_BASE_URL}/top-scores`);
+      const resposta = await fetch(`${API_BASE_URL}/top-scores/`);
       const dados = await resposta.json();
       this.topScores = dados.slice(0, 10);
 
@@ -232,7 +232,7 @@ class Game {
 
       const pais = 'br'
 
-      const insertResponse = await fetch(`${API_BASE_URL}/top-scores`, {
+      const insertResponse = await fetch(`${API_BASE_URL}/top-scores/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, score, pais, hash })
