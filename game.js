@@ -43,6 +43,25 @@ class Game {
     this.topScores = [];
     this.imagens.bandeiras = {};
     this.inputElement = document.getElementById('tecladoNome');
+    this.inputElement = document.createElement('input');
+    this.inputElement.type = 'text';
+    this.inputElement.maxLength = 10;
+    this.inputElement.style.position = 'absolute';
+    this.inputElement.style.left = '0px';
+    this.inputElement.style.top = '0px';
+    this.inputElement.style.width = '180px';
+    this.inputElement.style.height = '40px';
+    this.inputElement.style.font = "14px 'Press Start 2P', cursive";
+    this.inputElement.style.textAlign = 'left';
+    this.inputElement.style.padding = '10px';
+    this.inputElement.style.border = '2px solid green';
+    this.inputElement.style.background = 'white';
+    this.inputElement.style.color = 'black';
+    this.inputElement.style.pointerEvents = 'none';
+    this.inputElement.style.opacity = '0';
+    this.inputElement.style.zIndex = 100;
+    document.body.appendChild(this.inputElement);
+
   }
 
   async iniciar() {
@@ -57,6 +76,11 @@ class Game {
       // Clique no campo de nome
       if (mouseX >= 100 && mouseX <= 280 && mouseY >= 330 && mouseY <= 370) {
         this.digitandoNome = true;
+
+        const canvasRect = canvas.getBoundingClientRect();
+        this.inputElement.style.left = `${canvasRect.left + 100}px`;
+        this.inputElement.style.top = `${canvasRect.top + 330}px`;
+
         this.inputElement.value = this.nomeDigitado;
         this.inputElement.style.pointerEvents = 'auto';
         this.inputElement.style.opacity = '1';
@@ -71,6 +95,7 @@ class Game {
         this.inputElement.style.pointerEvents = 'none';
         this.inputElement.style.opacity = '0';
       }
+
 
       // Clique nos botões
       if (this.estado === 'inicial') {
