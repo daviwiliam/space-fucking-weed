@@ -6,6 +6,7 @@ import { carregarImagens } from './utils.js';
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const API_BASE_URL = 'https://web-production-026e8.up.railway.app';
 
 canvas.width = 384;
 canvas.height = 670;
@@ -198,19 +199,14 @@ class Game {
 
   async carregarTopScores() {
     try {
-      //const resposta = await fetch('https://sua-api.com/top-scores');
-      const dados = [
-        { "nome": "Ciclano", "score": 99999, "pais": "br" },
-        { "nome": "Fulano", "score": 8500, "pais": "us" },
-        { "nome": "Carai", "score": 5200, "pais": "jp" }
-      ];
-      //const dados = await resposta.json();
+      const resposta = await fetch(`${API_BASE_URL}/top-scores`);
+      const dados = await resposta.json();
       this.topScores = dados.slice(0, 10);
 
       const codigosUnicos = [...new Set(this.topScores.map(p => p.pais))];
       for (const codigo of codigosUnicos) {
         if (!this.imagens.bandeiras[codigo]) {
-          const bandeira = await carregarImagens([`assets/flags/${codigo}.jpg`]);
+          const bandeira = await carregarImagens([`assets/flags/br.jpg`]);
           this.imagens.bandeiras[codigo] = bandeira[0];
         }
       }
@@ -219,6 +215,32 @@ class Game {
     } catch (erro) {
       console.error("Erro ao carregar top scores:", erro);
       this.topScores = [];
+    }
+  }
+
+  async enviarPontuacao(nome, score) {
+    try {
+      const hashResponse = await fetch(`${API_BASE_URL}/hash`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, score })
+      });
+
+      if (!hashResponse.ok) throw new Error('Erro ao gerar hash');
+
+      const { hash } = await hashResponse.json();
+
+      const insertResponse = await fetch(`${API_BASE_URL}/top-scores`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, score, hash })
+      });
+
+      if (!insertResponse.ok) throw new Error('Erro ao salvar score');
+
+      console.log('Pontuação salva com sucesso');
+    } catch (error) {
+      console.error('Erro ao enviar pontuação:', error);
     }
   }
 
@@ -291,14 +313,16 @@ class Game {
     }
   }
 
-fimDeJogo() {
-  this.estado = 'gameOver';
-  clearInterval(this.scoreInterval);
-  clearInterval(this.asteroideInterval);
-  clearInterval(this.carroInterval);
-  clearInterval(this.pizzaInterval);
-  this.scoreInterval = null;
-}
+  fimDeJogo() {
+    this.estado = 'gameOver';
+    clearInterval(this.scoreInterval);
+    clearInterval(this.asteroideInterval);
+    clearInterval(this.carroInterval);
+    clearInterval(this.pizzaInterval);
+    this.scoreInterval = null;
+
+    this.enviarPontuacao(this.playerName, this.score);
+  }
 
   reiniciar() {
     this.estado = 'inicial';
