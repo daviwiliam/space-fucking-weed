@@ -386,7 +386,7 @@ class Game {
       });
 
       // Rodapé
-      let rodape = "© SPACE WEED 2024";
+      let rodape = "© SPACE WEED 2025";
       ctx.font = "10px 'Press Start 2P', cursive";
       ctx.fillStyle = "white";
       ctx.fillText(rodape, (canvas.width - ctx.measureText(rodape).width) / 2, canvas.height - 10);
